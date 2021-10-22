@@ -5,5 +5,5 @@ import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 export const Container = styled.View`
 flex: 1;
 background-color: ${COLORS.BLACK_SECONDARY};
-padding-top: ${getStatusBarHeight() + 17};
+padding-top: ${getStatusBarHeight() + 17}px;
 ` 
