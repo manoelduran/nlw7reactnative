@@ -1,9 +1,11 @@
-import styled from 'styled-components/native';
-import {COLORS, FONTS} from '../../theme'
-import {getStatusBarHeight} from 'react-native-iphone-x-helper';
+import { StyleSheet } from "react-native"
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
+import { COLORS } from "../../theme"
 
-export const Container = styled.View`
-flex: 1;
-background-color: ${COLORS.BLACK_SECONDARY};
-padding-top: ${getStatusBarHeight() + 17}px;
-` 
+export const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: COLORS.BLACK_SECONDARY,
+        paddingTop: getStatusBarHeight() + 17,
+    }
+})

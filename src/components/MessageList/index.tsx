@@ -1,21 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { api } from '../../services/api';
+import io from 'socket.io-client';
+import {MESSAGES_EXAMPLE} from '../../utils/messages'
 import { Message } from '../Message';
 import { Container } from './styles';
 
+let messagesQueue: Message[] = MESSAGES_EXAMPLE;
+
+const socket = io(String(api.defaults.baseURL));
+socket.on('new_message', (newMessage) => {
+    messagesQueue.push(newMessage);
+    console.log(newMessage)
+});
+
 export function MessageList() {
-    const message = {
-        id: '1',
-        text: 'mensagem',
-        user: {
-            name: 'manoel duran',
-            avatar_url: 'https://github.com/manoelduran.png',
-        },
-    }
+    const [currentMessages, setCurrentMessages] = useState<Message[]>([]);
+    useEffect(() => {
+        async function fetchMessages() {
+            const messagesResponse = await api.get<Message[]>('/messages/last3');
+            setCurrentMessages(messagesResponse.data)
+        }
+        fetchMessages()
+    }, [])
+    useEffect(() => {
+        const timer = setInterval(() => {
+            if (messagesQueue.length > 0) {
+                setCurrentMessages(prevState => [messagesQueue[0], prevState[0], prevState[1]]);
+                messagesQueue.shift();
+            }
+        }, 3000);
+        return () => clearInterval(timer)
+    }, [])
     return (
         <Container>
-            <Message data={message} />
-            <Message data={message} />
-            <Message data={message} />
+            {currentMessages.map(message =>
+                <Message key={message.id} data={message}  />
+            )}
         </Container>
     );
 }
